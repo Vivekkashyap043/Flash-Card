@@ -18,12 +18,12 @@ const Admin = () => {
   };
 
   return (
-    <div style={{width: "100%"}}>
+    <div >
       <div className='header'>
         <div className='menu'>
           <IoMenuOutline onClick={toggle} />
         </div>
-        <h1 style={{fontSize: 25, marginLeft: "10px", marginTop: "17px"}}>Flashcard</h1>
+        <h1 style={{fontSize: 25, marginLeft: "10px", marginTop: "20px"}}>Flashcard</h1>
       </div>
       <SideBar isOpen={isOpen}>
         <Routes>

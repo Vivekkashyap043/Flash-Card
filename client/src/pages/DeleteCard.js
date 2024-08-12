@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import Flashcard from './FlashCard';
+import DeleteFlash from './DeleteFlash';
 import { GrLinkPrevious, GrLinkNext } from "react-icons/gr";
-import "./Home.css";
+import "./DeleteCard.css";
 
 function DeleteCard() {
-  
+
   const [flashcards, setFlashcards] = useState([]);
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
+  const [flag, setFlag] = useState(true)
 
   const getAllFlashcards = async () => {
     try {
@@ -25,7 +26,7 @@ function DeleteCard() {
 
   useEffect(() => {
     getAllFlashcards();
-  }, []);
+  }, [flag]);
 
   const handlePrevious = () => {
     setIndex(prevIndex => Math.max(prevIndex - 1, 0));
@@ -44,10 +45,14 @@ function DeleteCard() {
       </div>
       <div className='flash'>
         {flashcards.length > 0 && (
-          <Flashcard 
+          <DeleteFlash 
             flashcard={flashcards[index]} 
+            all_flash = {flashcards}
             flipped={flipped} 
             setFlipped={setFlipped}
+            flag = { flag }
+            setFlag = { setFlag }
+            handlePrevious = { handlePrevious }
           />
         )}
       </div>
