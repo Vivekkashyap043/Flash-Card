@@ -1,117 +1,58 @@
-import React, { useState } from 'react';
-import "./AddCard.css";
+import React, { useEffect, useState } from 'react';
+import Flashcard from './FlashCard';
+import { GrLinkPrevious, GrLinkNext } from "react-icons/gr";
+import "./Home.css";
 
 function DeleteCard() {
   
-  const [question, setQuestion] = useState('');
-  const [answer, setAnswer] = useState('');
-  const [questionErr, setQuestionErr] = useState('');
-  const [answerErr, setAnswerErr] = useState('');
-  const [response, setResponse] = useState('');
+  const [flashcards, setFlashcards] = useState([]);
+  const [index, setIndex] = useState(0);
+  const [flipped, setFlipped] = useState(false);
 
-  const onSubmit = async () => {
-    let valid = true;
-
-    // Validate inputs
-    if (!question) {
-      setQuestionErr("Question cannot be empty");
-      valid = false;
-    } else {
-      setQuestionErr('');
-    }
-
-    if (!answer) {
-      setAnswerErr("Answer cannot be empty");
-      valid = false;
-    } else {
-      setAnswerErr('');
-    }
-
-    if (valid) {
-      try {
-        const res = await fetch('http://localhost:8000/flashcard/add-card', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ question, answer }),
-        });
-
-        if (!res.ok) {
-          setResponse("error");
-          throw new Error(`Error in inserting the data: ${res.status}`);
-        }
-
-        setResponse("ok");
-        setQuestion('');
-        setAnswer('');
-      } catch (err) {
-        console.log(err);
-        setResponse("error");
+  const getAllFlashcards = async () => {
+    try {
+      const res = await fetch("http://localhost:8000/flashcard/get-cards");
+      if (!res.ok) {
+        throw new Error(`Error in getting the data: ${res.status}`);
       }
+      const data = await res.json();
+      setFlashcards(data);
+      console.log("data 0 is : ", data[index]?.question);
+    } catch (err) {
+      console.log(err);
     }
   };
 
-  const handleQuestion = (e) => {
-    setQuestion(e.target.value);
-    if (e.target.value) {
-      setQuestionErr('');
-    } else {
-      setQuestionErr("Question cannot be empty");
-    }
+  useEffect(() => {
+    getAllFlashcards();
+  }, []);
+
+  const handlePrevious = () => {
+    setIndex(prevIndex => Math.max(prevIndex - 1, 0));
+    setFlipped(false)
   };
 
-  const handleAnswer = (e) => {
-    setAnswer(e.target.value);
-    if (e.target.value) {
-      setAnswerErr('');
-    } else {
-      setAnswerErr("Answer cannot be empty");
-    }
+  const handleNext = () => {
+    setIndex(prevIndex => Math.min(prevIndex + 1, flashcards.length - 1));
+    setFlipped(false)
   };
 
   return (
-    <div className='add'>
-      <div className='addcont'>
-        <div className="flashcard rounded" style={{ border: "1px solid black" }}>
-          <div className="flashcard-inner" style={{ border: "1px solid black" }}>
-            <h2 className='write'>Enter Question</h2>
-            <textarea
-              name="question"
-              id="question"
-              className='text'
-              onChange={handleQuestion}
-              value={question}
-            />
-            {questionErr && (
-              <p style={{ color: "red", textAlign: "center" }}>{questionErr}</p>
-            )}
-          </div>
-        </div>
-        <div className="flashcard rounded" style={{ border: "1px solid black" }}>
-          <div className="flashcard-inner" style={{ border: "1px solid black" }}>
-            <h2 className='write'>Enter Answer</h2>
-            <textarea
-              name="answer"
-              id="answer"
-              className='text'
-              onChange={handleAnswer}
-              value={answer}
-            />
-            {answerErr && (
-              <p style={{ color: "red", textAlign: "center" }}>{answerErr}</p>
-            )}
-          </div>
-        </div>
+    <div className='entry'>
+      <div className='previous' onClick={handlePrevious}>
+        <GrLinkPrevious />
       </div>
-      {response === "ok" && (
-        <p style={{ color: "green", textAlign: "center" }}>Flashcard is added successfully</p>
-      )}
-      {response === "error" && (
-        <p style={{ color: "red", textAlign: "center" }}>Error while adding the Flashcard</p>
-      )}
-      <div className='insert'>
-        <button className='btn btn-success' onClick={onSubmit}>Insert Flashcard</button>
+      <div className='flash'>
+        {flashcards.length > 0 && (
+          <Flashcard 
+            flashcard={flashcards[index]} 
+            flipped={flipped} 
+            setFlipped={setFlipped}
+          />
+        )}
+      </div>
+      <div className='next' onClick={handleNext}>
+        <GrLinkNext />
       </div>
     </div>
   );
