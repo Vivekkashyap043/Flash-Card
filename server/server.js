@@ -1,5 +1,6 @@
 const express = require("express")
 const bodyParser = require("body-parser")
+const cors = require("cors")
 
 const connection = require("./connection")
 const ApiRoutes = require("./ApiRoutes")
@@ -8,6 +9,7 @@ const app = express()
 
 app.use(bodyParser.json({extended:true}));
 app.use(bodyParser.urlencoded({extended:true})); 
+app.use(cors())
 
 // Connecting to database
 connection.connect( (err) => {

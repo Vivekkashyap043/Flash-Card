@@ -1,0 +1,41 @@
+.flashcard {
+    width: 300px;
+    height: 95%;
+    perspective: 1000px;
+  }
+
+.add{
+    width: 100%;
+    height: 100%;
+}
+
+.addcont{
+    padding-top: 20px;
+    width: 100%;
+    height: 75%;
+    display: flex;
+    gap: 50px;
+    justify-content: center;
+}
+ 
+.insert{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    padding-top: 20px;
+}
+
+.write{
+    text-align: center;
+    margin-top: 10px;
+    font-size: 20;
+    color:#0A092D ;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.text{
+    margin-top: 50px;
+    width: 80%;
+    height: 50%;
+    padding: 10px;
+}
